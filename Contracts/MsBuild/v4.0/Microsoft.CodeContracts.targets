@@ -635,6 +635,25 @@
   </Target>
 
   <!--=====================================================================
+      Register built contract assembly with project outputs
+    ======================================================================-->
+  <PropertyGroup>
+    <BuiltProjectOutputGroupDependsOn>$(BuiltProjectOutputGroupDependsOn);_IncludeCodeContractIntoBuiltProjectOutputGroup</BuiltProjectOutputGroupDependsOn>
+  </PropertyGroup>
+
+  <Target
+     Name="_IncludeCodeContractIntoBuiltProjectOutputGroup"
+     Condition="'$(TargetName)' != 'Microsoft.Contracts' and '$(CodeContractsReferenceAssembly)' == 'build'">
+    <ItemGroup>
+      <BuiltProjectOutputGroupOutput Include="@(ContractReferenceAssemblyAbsolute)">
+        <TargetPath>$(CodeContractsContractSubDir)%(Filename)%(Extension)</TargetPath>
+        <FinalOutputPath>%(FullPath)</FinalOutputPath>
+        <OriginalItemSpec>%(FullPath)</OriginalItemSpec>
+      </BuiltProjectOutputGroupOutput>
+    </ItemGroup>
+  </Target>
+
+  <!--=====================================================================
       Include Code Analysis target
     ======================================================================-->
   <Import Project="Microsoft.CodeContractAnalysis.targets" />
